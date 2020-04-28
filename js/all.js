@@ -21,18 +21,13 @@ let timeZoneArray = [
   "Australia/Sydney",
 ];
 
-let localeDates = timeZoneArray.map(function (timezone) {
-  let localeOption = {
-    day: "numeric", // "1"
-    month: "short", // "Apr"
-    year: "numeric", // "2020"
-    hour: "2-digit", // "00"
-    minute: "2-digit", // "00"
-    hour12: false, // 24 時制
-    timeZone: timezone, // "America/New_York"
-  };
-  return new Date().toLocaleDateString("en-US", localeOption);
-});
+let cities = [
+  { date: NYC_date, hr: NYC_Hr_Min },
+  { date: LDN_date, hr: LDN_Hr_Min },
+  { date: BKK_date, hr: BKK_Hr_Min },
+  { date: TPE_date, hr: TPE_Hr_Min },
+  { date: SYD_date, hr: SYD_Hr_Min },
+];
 
 // 判斷是否為晚上，定義為晚上六點到早上六點前
 function isNight(hour) {
@@ -43,15 +38,21 @@ function isNight(hour) {
   }
 }
 
-let cities = [
-  { date: NYC_date, hr: NYC_Hr_Min },
-  { date: LDN_date, hr: LDN_Hr_Min },
-  { date: BKK_date, hr: BKK_Hr_Min },
-  { date: TPE_date, hr: TPE_Hr_Min },
-  { date: SYD_date, hr: SYD_Hr_Min },
-];
-
 function displayClock(e) {
+  // 取得當下時間的宣告要放在函數裡，才會有間隔執行
+  let localeDates = timeZoneArray.map(function (timezone) {
+    let localeOption = {
+      day: "numeric", // "1"
+      month: "short", // "Apr"
+      year: "numeric", // "2020"
+      hour: "2-digit", // "00"
+      minute: "2-digit", // "00"
+      hour12: false, // 24 時制
+      timeZone: timezone, // "America/New_York"
+    };
+    return new Date().toLocaleDateString("en-US", localeOption);
+  });
+
   for (const cityIndex in cities) {
     let city_date = cities[cityIndex].date;
     let city_Hr_Min = cities[cityIndex].hr;
