@@ -39,7 +39,7 @@ function isNight(hour) {
 }
 
 function displayClock(e) {
-  // 取得當下時間的宣告要放在函數裡，才會有間隔執行
+  // 取得當下時間的宣告要放在函數裡，才有間隔執行、更新
   let localeDates = timeZoneArray.map(function (timezone) {
     let localeOption = {
       day: "numeric", // "1"
@@ -62,7 +62,7 @@ function displayClock(e) {
     city_date.textContent = city_Array.splice(0, 2);
     city_Hr_Min.textContent = city_Array;
     let city_subArray = String(city_Array).split(":");
-    // 若為夜晚，對城市的外框 <div> 加上 .night 的 class
+    // 若為夜晚，對城市的外框 <div> 加上 .night 的樣式
     if (isNight(city_subArray[0])) {
       city_Hr_Min.parentNode.setAttribute("class", "timebox night");
     } else {
