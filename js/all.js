@@ -43,68 +43,34 @@ function isNight(hour) {
   }
 }
 
+let cities = [
+  { date: NYC_date, hr: NYC_Hr_Min },
+  { date: LDN_date, hr: LDN_Hr_Min },
+  { date: BKK_date, hr: BKK_Hr_Min },
+  { date: TPE_date, hr: TPE_Hr_Min },
+  { date: SYD_date, hr: SYD_Hr_Min },
+];
+
 function displayClock(e) {
-  // New York
-  // localeDates[index] 為字串
-  let NYC_Array = localeDates[0].split(",");
-  // NYC_Array 為陣列 ["MMM DD", "YYYY", "00:00"]
-  NYC_date.textContent = NYC_Array.splice(0, 2);
-  NYC_Hr_Min.textContent = NYC_Array;
-  let NYC_subArray = String(NYC_Array).split(":");
-  // 若為夜晚，對紐約 timebox 加上 .night 的 class，若否則移除
-  if (isNight(NYC_subArray[0])) {
-    NYC_Hr_Min.parentNode.setAttribute("class", "timebox night");
-  } else {
-    NYC_Hr_Min.parentNode.setAttribute("class", "timebox firstbox");
-  }
-
-  // London
-  let LDN_Array = localeDates[1].split(",");
-  LDN_date.textContent = LDN_Array.splice(0, 2);
-  LDN_Hr_Min.textContent = LDN_Array;
-  let LDN_subArray = String(LDN_Array).split(":");
-  if (isNight(LDN_subArray[0])) {
-    LDN_Hr_Min.parentNode.setAttribute("class", "timebox night");
-  } else {
-    LDN_Hr_Min.parentNode.setAttribute("class", "timebox");
-  }
-
-  // Bangkok
-  let BKK_Array = localeDates[2].split(",");
-  BKK_date.textContent = BKK_Array.splice(0, 2);
-  BKK_Hr_Min.textContent = BKK_Array;
-  let BKK_subArray = String(BKK_Array).split(":");
-  if (isNight(BKK_subArray[0])) {
-    BKK_Hr_Min.parentNode.setAttribute("class", "timebox night");
-  } else {
-    BKK_Hr_Min.parentNode.setAttribute("class", "timebox");
-  }
-
-  // Taipei
-  let TPE_Array = localeDates[3].split(",");
-  TPE_date.textContent = TPE_Array.splice(0, 2);
-  TPE_Hr_Min.textContent = TPE_Array;
-  let TPE_subArray = String(TPE_Array).split(":");
-  if (isNight(TPE_subArray[0])) {
-    TPE_Hr_Min.parentNode.setAttribute("class", "timebox night");
-  } else {
-    TPE_Hr_Min.parentNode.setAttribute("class", "timebox");
-  }
-
-  // Sydney
-  let SYD_Array = localeDates[4].split(",");
-  SYD_date.textContent = SYD_Array.splice(0, 2);
-  SYD_Hr_Min.textContent = SYD_Array;
-  let SYD_subArray = String(SYD_Array).split(":");
-  // 若為夜晚，對紐約 timebox 加上 .night 的 class，若否則移除
-  if (isNight(SYD_subArray[0])) {
-    SYD_Hr_Min.parentNode.setAttribute("class", "timebox night");
-  } else {
-    SYD_Hr_Min.parentNode.setAttribute("class", "timebox");
+  for (const cityIndex in cities) {
+    let city_date = cities[cityIndex].date;
+    let city_Hr_Min = cities[cityIndex].hr;
+    // localeDates[index] 為字串
+    let city_Array = localeDates[cityIndex].split(",");
+    // city_Array 為陣列 ["MMM DD", "YYYY", "00:00"]
+    city_date.textContent = city_Array.splice(0, 2);
+    city_Hr_Min.textContent = city_Array;
+    let city_subArray = String(city_Array).split(":");
+    // 若為夜晚，對城市的外框 <div> 加上 .night 的 class
+    if (isNight(city_subArray[0])) {
+      city_Hr_Min.parentNode.setAttribute("class", "timebox night");
+    } else {
+      city_Hr_Min.parentNode.setAttribute("class", "timebox");
+    }
   }
 }
 
-// 一載入頁面先執行一次
+// 一載入頁面先執行一次displayClock()
 displayClock();
 
 window.setInterval(function () {
