@@ -146,7 +146,7 @@ body {
 }
 
 h1 {
-  font-size: 4.5rem;
+  font-size: 72px;
   color: #000000;
   font-weight: 800;
   border-top: 0.5rem solid #000000;
@@ -188,6 +188,7 @@ h3 {
 
 .left-sec {
   padding: 1rem 0;
+  text-transform: uppercase;
 }
 
 .left-sec p {

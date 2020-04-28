@@ -1,196 +1,113 @@
-const millisecPerMin = 60000;
-const millisecPerHour = millisecPerMin * 60;
-
 // 選擇時間(小時、分鐘)的 DOM 元素
-const newYorkHour = document.getElementById("new-york-time");
-const londonHour = document.getElementById("london-time");
-const bangkokHour = document.getElementById("bangkok-time");
-const taipeiHour = document.getElementById("taipei-time");
-const sydneyHour = document.getElementById("sydney-time");
+const NYC_Hr_Min = document.getElementById("nyc-hr-min");
+const LDN_Hr_Min = document.getElementById("ldn-hr-min");
+const BKK_Hr_Min = document.getElementById("bkk-hr-min");
+const TPE_Hr_Min = document.getElementById("tpe-hr-min");
+const SYD_Hr_Min = document.getElementById("syd-hr-min");
 
 // 選擇日期、月份的 DOM 元素
-const newYorkDay = document.getElementById("new-york-day");
-const londonDay = document.getElementById("london-day");
-const bangkokDay = document.getElementById("bangkok-day");
-const taipeiDay = document.getElementById("taipei-day");
-const sydneyDay = document.getElementById("sydney-day");
-let hourStr = "";
-let minuteStr = "";
+const NYC_date = document.getElementById("nyc-date");
+const LDN_date = document.getElementById("ldn-date");
+const BKK_date = document.getElementById("bkk-date");
+const TPE_date = document.getElementById("tpe-date");
+const SYD_date = document.getElementById("syd-date");
 
-// 幾點鐘若小於 10，前方補上 "0"
-function checkDigit(date) {
-  if (date.getHours() < 10) {
-    hourStr = "0";
-  }
-}
+// 時區陣列，做為 toLocaleString(locale, option) 的 option
+let timeZoneArray = [
+  "America/New_York",
+  "Europe/London",
+  "Asia/Bangkok",
+  "Asia/Taipei",
+  "Australia/Sydney",
+];
 
-// 將月份數字轉成英文月份簡寫
-function monthStr(monthNum) {
-  switch (monthNum) {
-    case 0:
-      return "JAN.";
-    case 1:
-      return "FEB.";
-    case 2:
-      return "MAR.";
-    case 3:
-      return "APR.";
-    case 4:
-      return "MAY";
-    case 5:
-      return "JUNE";
-    case 6:
-      return "JULY";
-    case 7:
-      return "AUG.";
-    case 8:
-      return "SEPT.";
-    case 9:
-      return "OCT.";
-    case 10:
-      return "NOV.";
-    case 11:
-      return "DEC.";
-    default:
-      return null;
-  }
-}
+let localeDates = timeZoneArray.map(function (timezone) {
+  let localeOption = {
+    day: "numeric", // "1"
+    month: "short", // "Apr"
+    year: "numeric", // "2020"
+    hour: "2-digit", // "00"
+    minute: "2-digit", // "00"
+    hour12: false, // 24 時制
+    timeZone: timezone, // "America/New_York"
+  };
+  return new Date().toLocaleDateString("en-US", localeOption);
+});
 
 // 判斷是否為晚上，定義為晚上六點到早上六點前
-function isNight(date) {
-  if (date.getHours() < 6) {
-    return true;
-  } else if (date.getHours() >= 18) {
-    return true;
-  } else {
+function isNight(hour) {
+  if (hour >= 6 && hour < 18) {
     return false;
+  } else {
+    return true;
   }
 }
 
-function renderTimeInfo() {
-  // 取得本地時間
-  const localDate = new Date();
-  // 取得本地與 UTC 之間的分鐘差，為 -480 (GMT+8)
-  const localToUTC = localDate.getTimezoneOffset();
-  // 一分鐘為六萬毫秒，本地時間戳 + 差異 * 60000 = UTC 時間戳
-  const stampUTC = localDate.getTime() + localToUTC * millisecPerMin;
-
-  // 取得倫敦時間
-  const dateUTC = new Date(stampUTC);
-
-  // 一小時等於三百六十萬毫秒，紐約-5, 曼谷+7, 台北+8, 雪梨+10
-  const newYorkDate = new Date(stampUTC - 5 * millisecPerHour);
-  const bangkokDate = new Date(stampUTC + 7 * millisecPerHour);
-  const taipeiDate = new Date(stampUTC + 8 * millisecPerHour);
-  const sydneyDate = new Date(stampUTC + 10 * millisecPerHour);
-
-  // 這幾地分鐘數不會改變(無增減半小時的狀況)，判斷一次即可
-  if (dateUTC.getMinutes() < 10) {
-    minuteStr = "0";
-  }
-
-  // 紐約
-  checkDigit(newYorkDate);
-  newYorkHour.textContent =
-    hourStr +
-    newYorkDate.getHours() +
-    ":" +
-    minuteStr +
-    newYorkDate.getMinutes();
-  hourStr = "";
-  newYorkDay.textContent =
-    newYorkDate.getDate() +
-    " " +
-    monthStr(newYorkDate.getMonth()) +
-    " " +
-    newYorkDate.getFullYear();
+function displayClock(e) {
+  // New York
+  // localeDates[index] 為字串
+  let NYC_Array = localeDates[0].split(",");
+  // NYC_Array 為陣列 ["MMM DD", "YYYY", "00:00"]
+  NYC_date.textContent = NYC_Array.splice(0, 2);
+  NYC_Hr_Min.textContent = NYC_Array;
+  let NYC_subArray = String(NYC_Array).split(":");
   // 若為夜晚，對紐約 timebox 加上 .night 的 class，若否則移除
-  if (isNight(newYorkDate)) {
-    newYorkHour.parentNode.setAttribute("class", "timebox night");
+  if (isNight(NYC_subArray[0])) {
+    NYC_Hr_Min.parentNode.setAttribute("class", "timebox night");
   } else {
-    newYorkHour.parentNode.setAttribute("class", "timebox firstbox");
+    NYC_Hr_Min.parentNode.setAttribute("class", "timebox firstbox");
   }
 
-  // 倫敦
-  checkDigit(dateUTC);
-  londonHour.textContent =
-    hourStr + dateUTC.getHours() + ":" + minuteStr + dateUTC.getMinutes();
-  hourStr = "";
-  londonDay.textContent =
-    dateUTC.getDate() +
-    " " +
-    monthStr(dateUTC.getMonth()) +
-    " " +
-    dateUTC.getFullYear();
-  if (isNight(dateUTC)) {
-    londonHour.parentNode.setAttribute("class", "timebox night");
+  // London
+  let LDN_Array = localeDates[1].split(",");
+  LDN_date.textContent = LDN_Array.splice(0, 2);
+  LDN_Hr_Min.textContent = LDN_Array;
+  let LDN_subArray = String(LDN_Array).split(":");
+  if (isNight(LDN_subArray[0])) {
+    LDN_Hr_Min.parentNode.setAttribute("class", "timebox night");
   } else {
-    londonHour.parentNode.setAttribute("class", "timebox");
+    LDN_Hr_Min.parentNode.setAttribute("class", "timebox");
   }
 
-  // 曼谷
-  checkDigit(bangkokDate);
-  bangkokHour.textContent =
-    hourStr +
-    bangkokDate.getHours() +
-    ":" +
-    minuteStr +
-    bangkokDate.getMinutes();
-  hourStr = "";
-  bangkokDay.textContent =
-    bangkokDate.getDate() +
-    " " +
-    monthStr(bangkokDate.getMonth()) +
-    " " +
-    bangkokDate.getFullYear();
-  if (isNight(bangkokDate)) {
-    bangkokHour.parentNode.setAttribute("class", "timebox night");
+  // Bangkok
+  let BKK_Array = localeDates[2].split(",");
+  BKK_date.textContent = BKK_Array.splice(0, 2);
+  BKK_Hr_Min.textContent = BKK_Array;
+  let BKK_subArray = String(BKK_Array).split(":");
+  if (isNight(BKK_subArray[0])) {
+    BKK_Hr_Min.parentNode.setAttribute("class", "timebox night");
   } else {
-    bangkokHour.parentNode.setAttribute("class", "timebox");
+    BKK_Hr_Min.parentNode.setAttribute("class", "timebox");
   }
 
-  // 台北
-  checkDigit(taipeiDate);
-  taipeiHour.textContent =
-    hourStr + taipeiDate.getHours() + ":" + minuteStr + taipeiDate.getMinutes();
-  hourStr = "";
-  taipeiDay.textContent =
-    taipeiDate.getDate() +
-    " " +
-    monthStr(taipeiDate.getMonth()) +
-    " " +
-    taipeiDate.getFullYear();
-  if (isNight(taipeiDate)) {
-    taipeiHour.parentNode.setAttribute("class", "timebox night");
+  // Taipei
+  let TPE_Array = localeDates[3].split(",");
+  TPE_date.textContent = TPE_Array.splice(0, 2);
+  TPE_Hr_Min.textContent = TPE_Array;
+  let TPE_subArray = String(TPE_Array).split(":");
+  if (isNight(TPE_subArray[0])) {
+    TPE_Hr_Min.parentNode.setAttribute("class", "timebox night");
   } else {
-    taipeiHour.parentNode.setAttribute("class", "timebox");
+    TPE_Hr_Min.parentNode.setAttribute("class", "timebox");
   }
 
-  // 雪梨
-  checkDigit(sydneyDate);
-  sydneyHour.textContent =
-    hourStr + sydneyDate.getHours() + ":" + minuteStr + sydneyDate.getMinutes();
-  hourStr = "";
-  sydneyDay.textContent =
-    sydneyDate.getDate() +
-    " " +
-    monthStr(sydneyDate.getMonth()) +
-    " " +
-    sydneyDate.getFullYear();
-  if (isNight(sydneyDate)) {
-    sydneyHour.parentNode.setAttribute("class", "timebox night");
+  // Sydney
+  let SYD_Array = localeDates[4].split(",");
+  SYD_date.textContent = SYD_Array.splice(0, 2);
+  SYD_Hr_Min.textContent = SYD_Array;
+  let SYD_subArray = String(SYD_Array).split(":");
+  // 若為夜晚，對紐約 timebox 加上 .night 的 class，若否則移除
+  if (isNight(SYD_subArray[0])) {
+    SYD_Hr_Min.parentNode.setAttribute("class", "timebox night");
   } else {
-    sydneyHour.parentNode.setAttribute("class", "timebox");
+    SYD_Hr_Min.parentNode.setAttribute("class", "timebox");
   }
-
-  // 歸零分鐘補零字串
-  minuteStr = "";
 }
 
 // 一載入頁面先執行一次
-renderTimeInfo();
+displayClock();
 
 window.setInterval(function () {
-  renderTimeInfo();
+  displayClock();
   // 三秒更新一次
 }, 3000);
