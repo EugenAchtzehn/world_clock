@@ -1,6 +1,7 @@
 // 選擇時間(小時、分鐘)的 DOM 元素
 const NYC_Hr_Min = document.getElementById("nyc-hr-min");
 const LDN_Hr_Min = document.getElementById("ldn-hr-min");
+const MUC_Hr_Min = document.getElementById("muc-hr-min");
 const BKK_Hr_Min = document.getElementById("bkk-hr-min");
 const TPE_Hr_Min = document.getElementById("tpe-hr-min");
 const SYD_Hr_Min = document.getElementById("syd-hr-min");
@@ -8,6 +9,7 @@ const SYD_Hr_Min = document.getElementById("syd-hr-min");
 // 選擇日期、月份的 DOM 元素
 const NYC_date = document.getElementById("nyc-date");
 const LDN_date = document.getElementById("ldn-date");
+const MUC_date = document.getElementById("muc-date");
 const BKK_date = document.getElementById("bkk-date");
 const TPE_date = document.getElementById("tpe-date");
 const SYD_date = document.getElementById("syd-date");
@@ -16,6 +18,7 @@ const SYD_date = document.getElementById("syd-date");
 let timeZoneArray = [
   "America/New_York",
   "Europe/London",
+  "Europe/Berlin",
   "Asia/Bangkok",
   "Asia/Taipei",
   "Australia/Sydney",
@@ -24,6 +27,7 @@ let timeZoneArray = [
 let cities = [
   { date: NYC_date, hr: NYC_Hr_Min },
   { date: LDN_date, hr: LDN_Hr_Min },
+  { date: MUC_date, hr: MUC_Hr_Min },
   { date: BKK_date, hr: BKK_Hr_Min },
   { date: TPE_date, hr: TPE_Hr_Min },
   { date: SYD_date, hr: SYD_Hr_Min },
@@ -74,7 +78,8 @@ function displayClock(e) {
 // 一載入頁面先執行一次displayClock()
 displayClock();
 
-window.setInterval(function () {
-  displayClock();
+window.setInterval(
+  displayClock,
   // 三秒更新一次
-}, 3000);
+  3000
+);
