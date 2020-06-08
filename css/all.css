@@ -142,17 +142,17 @@ body {
 .container {
   width: 535px;
   margin: 4.5rem auto;
-  font-family: "Open Sans", Arial, "Microsoft JhengHei", Helvetica, sans-serif;
+  font-family: Arial, "Microsoft JhengHei", Helvetica, sans-serif;
 }
 
 h1 {
-  font-size: 72px;
+  font-size: 70px;
   color: #000000;
-  font-weight: 800;
   border-top: 0.5rem solid #000000;
   border-bottom: 0.5rem solid #000000;
   text-align: center;
   margin: 0 auto 2rem auto;
+  font-family: "Open Sans", Arial, sans-serif;
 }
 
 h2 {
